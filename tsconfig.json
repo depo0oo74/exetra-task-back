@@ -22,8 +22,7 @@
       "allowJs": true,
       "noEmit": false,
       "esModuleInterop": true,
-      "skipLibCheck": true,
-      "types": ["express"]
+      "skipLibCheck": true
   },
     "include": [
       "./src/**/*",
