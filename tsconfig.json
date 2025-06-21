@@ -2,6 +2,10 @@
   "compilerOptions": {
     "target": "es2020",
     "lib": ["es2020", "esnext.asynciterable", "DOM"],
+    "typeRoots": [
+      "./node_modules/@types",
+      "./node_modules/@types/node"
+    ],
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
