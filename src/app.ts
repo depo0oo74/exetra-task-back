@@ -34,9 +34,9 @@ app.use('*', (_, res) => {
 
 
 // ** PORT to run
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.NODE_ENV === 'production' ? process.env.PORT : 5000;
 
 // ** Listening the Server on specific PORT
 app.listen(PORT, () => {
-  console.log(`Server is running now on port ${PORT}`); 
+  console.log(`Server is running now on port ${PORT}`);
 });
