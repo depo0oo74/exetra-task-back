@@ -1,5 +1,5 @@
 {
-  "name": "idda-apis",
+  "name": "exetra-apis",
   "version": "1.0.0",
   "main": "./src/app.ts",
   "scripts": {

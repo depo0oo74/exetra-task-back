@@ -96,6 +96,8 @@ export const login = async (req: Request, res: Response) => {
 export const checkAuth = async (req: Request, res: Response) => {
   const token: string | undefined = req.cookies?.accessToken;
 
+  console.log('token =>', token)
+
   if (!token) return res.status(401).json({ 
     status: "Error",
     message:  "Not authorized",
