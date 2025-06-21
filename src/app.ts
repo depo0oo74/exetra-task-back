@@ -13,6 +13,10 @@ app.use(cors({
   credentials: true,
 }));
 
+// ** Import and use cookie parser
+import cookieParser from 'cookie-parser';
+app.use(cookieParser()); 
+
 // ** Import Database
 import "./database";
 

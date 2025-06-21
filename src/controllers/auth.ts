@@ -78,6 +78,9 @@ export const login = async (req: Request, res: Response) => {
     httpOnly: true
   }
 
+  // delete password from retuned json
+    isUser.password = undefined;
+
   // Return response 
     return res
     .status(200)
@@ -85,6 +88,50 @@ export const login = async (req: Request, res: Response) => {
     .json({
       status: "Success",
       message: "Successfully login",
-      accessToken
+      data: isUser
   });
 }
+
+// ** check auth controller 
+export const checkAuth = async (req: Request, res: Response) => {
+  const token: string | undefined = req.cookies?.accessToken;
+
+  if (!token) return res.status(401).json({ 
+    status: "Error",
+    message:  "Not authorized",
+    authenticated: false 
+  });
+
+  try {
+    const decoded: object | any = jwt.verify(token, secretKey);
+    res.status(200).json({ authenticated: true, user: decoded });
+  } catch (err) {
+    res.status(401).json({ 
+      status: "Error",
+      message:  "Not authorized",
+      authenticated: false 
+    });
+  }
+}
+
+
+// ** logout controller 
+export const logout = async (req: Request, res: Response) => {
+  try {
+    res.clearCookie('accessToken', {
+      secure: environment == 'production' ? true : false,
+      httpOnly: true
+    });
+    
+    res.status(200).json({
+      status: "Success",
+      message: "Logged out successfully",
+    });
+  } catch (err) {
+    console.error('Logout error:', err);
+    res.status(500).json({
+      status: "Error",
+      message: "Internal server error during logout",
+    });
+  }
+};
