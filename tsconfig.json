@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-      "types": ["node", "jest", "express"],
+      "types": ["node", "express"],
       "target": "es2020",
       "lib": [
         "es2020",
