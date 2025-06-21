@@ -1,9 +1,11 @@
 {
     "compilerOptions": {
-      "target": "es2017",
+      "types": ["node"],
+      "target": "es2020",
       "lib": [
-        "es2017",
-        "esnext.asynciterable"
+        "es2020",
+        "esnext.asynciterable",
+        "DOM"
       ],
       "typeRoots": [
         "./node_modules/@types"
