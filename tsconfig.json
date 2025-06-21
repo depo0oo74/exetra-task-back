@@ -22,7 +22,8 @@
       "allowJs": true,
       "noEmit": false,
       "esModuleInterop": true,
-      "skipLibCheck": true
+      "skipLibCheck": true,
+      "types": ["node"]
   },
     "include": [
       "./src/**/*",
