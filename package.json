@@ -4,7 +4,8 @@
   "main": "./src/app.ts",
   "scripts": {
     "dev": "nodemon ./src/app.ts",
-    "build": "tsc",
+    "prebuild": "rm -rf node_modules package-lock.json",
+    "build": "npm ci && tsc",
     "start": "node dist/app.js"
   },
   "keywords": [
