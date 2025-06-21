@@ -75,7 +75,7 @@ export const login = async (req: Request, res: Response) => {
   const cookieOptions: object = {
     expires: cookieExpiresIn,
     secure: environment == 'production' ? true : false,
-    httpOnly: true
+    httpOnly: false
   }
 
   // delete password from retuned json
@@ -96,7 +96,7 @@ export const login = async (req: Request, res: Response) => {
 export const checkAuth = async (req: Request, res: Response) => {
   const token: string | undefined = req.cookies?.accessToken;
 
-  console.log('token =>', token)
+  console.log('token =>', token) // undefined
 
   if (!token) return res.status(401).json({ 
     status: "Error",
