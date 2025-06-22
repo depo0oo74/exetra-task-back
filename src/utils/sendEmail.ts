@@ -4,7 +4,6 @@ import nodemailer from 'nodemailer';
 const emailService: string | any = process.env.EMAIL_SERVICE;
 const emailUser: string | any = process.env.EMAIL_USER;
 const emailPass: number | any = process.env.EMAIL_PASS;
-const environment: string | any = process.env.NODE_ENV;
 
 const sendEmail = async ({ to, subject, text }: { to: string, subject: string, text: string }) => {
   const transporter = nodemailer.createTransport({
@@ -14,7 +13,7 @@ const sendEmail = async ({ to, subject, text }: { to: string, subject: string, t
       pass: emailPass,
     },
     tls: {
-        rejectUnauthorized: environment == 'production' ? true : false,
+        rejectUnauthorized: true,
     },
   });
 

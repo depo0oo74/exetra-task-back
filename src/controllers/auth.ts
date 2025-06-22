@@ -10,7 +10,6 @@ import sendEmail from '../utils/sendEmail'
 const secretKey: string | any = process.env.JWT_SECRET;
 const tokenExpiration: string | any = process.env.JWT_EXPIRATION;
 const cookieExpiration: number | any = process.env.JWT_COOKIE_EXPIRATION;
-const environment: string | any = process.env.NODE_ENV;
 const clientURL: string | any = process.env.CLIENT_URL;
 
 // ** Signup controller 
