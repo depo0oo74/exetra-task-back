@@ -8,6 +8,8 @@ export interface IUser {
     email: string;
     password: string;
     cpassword: string;
+    resetPasswordToken: string,
+    resetPasswordExpire: number
 }
 
 // User schema
@@ -45,7 +47,9 @@ const userSchema = new Schema <IUser>(
                 },
                 message: 'Passwords do not match'
             }
-        }
+        },
+        resetPasswordToken: String,
+        resetPasswordExpire: Number
     }, 
     {
         timestamps: true
@@ -58,7 +62,7 @@ userSchema.pre('save', async function (next) {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
     
-    // Clear cpassword field after hashing
+    // Clear cpassword prop after hashing
     this.cpassword = undefined;
     
     next();

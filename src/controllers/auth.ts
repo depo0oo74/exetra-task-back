@@ -3,12 +3,15 @@ import User, { IUser } from "../models/user";
 import handlingErrors from '../utils/handlingErrors'
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import * as crypto from 'crypto';
+import sendEmail from '../utils/sendEmail'
 
 // Vars
 const secretKey: string | any = process.env.JWT_SECRET;
 const tokenExpiration: string | any = process.env.JWT_EXPIRATION;
-const cookieExpiration: number | any = process.env.JWT_COOKIE_EXPIRATION
-const environment: string | any = process.env.NODE_ENV
+const cookieExpiration: number | any = process.env.JWT_COOKIE_EXPIRATION;
+const environment: string | any = process.env.NODE_ENV;
+const clientURL: string | any = process.env.CLIENT_URL;
 
 // ** Signup controller 
 export const signup = async (req: Request, res: Response) => {
@@ -131,7 +134,93 @@ export const logout = async (req: Request, res: Response) => {
   } catch (err) {
     res.status(500).json({
       status: "Error",
-      message: "Internal server error during logout",
+      message: "Internal server error"
     });
+  }
+};
+
+// ** Forgot password controller
+export const forgotPassword = async (req: Request, res: Response) => {
+  const { email }: IUser = req.body;
+
+  try {
+    // check if user exists
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ 
+      status: "Error",
+      message: 'User not found' 
+    });
+
+    // generate token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+    // set token & expiration date in database
+    user.resetPasswordToken = hashedToken;
+    user.resetPasswordExpire = Date.now() + 15 * 60 * 1000; // 15 minutes
+    await user.save();
+
+    // send email to user with reset url
+    const resetURL = `${clientURL}/reset-password/${resetToken}`;
+    const message = `Click the link to reset your password: ${resetURL}`;
+
+    await sendEmail({
+      to: user.email,
+      subject: 'Password Reset',
+      text: message,
+    });
+
+    // return response
+    res.status(200).json({ 
+      status: "Success",
+      message: 'Password reset email sent' 
+    });
+
+  } catch (error) {
+    handlingErrors(error, req, res)
+  }
+};
+
+
+// ** Forgot password controller
+export const resetPassword = async (req: Request, res: Response) => {
+  const { token } : string | any = req.params;
+  const { password } : IUser = req.body;
+
+  // check payload
+  if (!token || !password) {
+    return res.status(400).json({ status: "Error", message: "Token and password are required" });
+  }
+
+  try {
+    // check token if valid
+    const hashedToken: string = crypto.createHash('sha256').update(token).digest('hex');
+
+    const user = await User.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ status: "Error", message: "Invalid or expired token" });
+    }
+
+    // hash new password
+    // const salt = await bcrypt.genSalt(10);
+    user.password = password
+
+    // clear reset token props and save
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+
+    // return response
+    return res.status(200).json({ 
+      status: "Success",
+      message: "Password reset successfully"
+    });
+
+  } catch (error) {
+    handlingErrors(error, req, res)
   }
 };
