@@ -17,9 +17,8 @@ const handlingErrors = async (err: Error,  req: Request, res: Response) => {
 
     return res.status(500).json({
         status: "Error",
-        message: "An error occurred"
+        message: "Internal server error"
     });
-
 }
 
 
