@@ -182,11 +182,16 @@ export const forgotPassword = async (req: Request, res: Response) => {
 // ** Forgot password controller
 export const resetPassword = async (req: Request, res: Response) => {
   const { token } : string | any = req.params;
-  const { password } : IUser = req.body;
+  const { password, cpassword } : IUser = req.body;
 
   // check payload
-  if (!token || !password) {
-    return res.status(400).json({ status: "Error", message: "Token and password are required" });
+  if (!token || !password || !cpassword) {
+    return res.status(400).json({ status: "Error", message: "Token and passwords are required" });
+  }
+
+  // check if passwords are match
+  if (password !== cpassword) {
+    return res.status(400).json({ status: "Error", message: "Passwords not match" });
   }
 
   try {
