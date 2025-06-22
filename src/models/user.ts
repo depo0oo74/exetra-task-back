@@ -8,8 +8,8 @@ export interface IUser {
     email: string;
     password: string;
     cpassword: string;
-    resetPasswordToken: string,
-    resetPasswordExpire: number
+    resetPasswordToken: string;
+    resetPasswordExpire: number;
 }
 
 // User schema
@@ -18,7 +18,7 @@ const userSchema = new Schema <IUser>(
         username: {
             type: 'String',
             required: [true, 'Username is required'],
-            unique: true,
+            minlength: [3, 'Password must be at lease 3 charachters'],
         },
         email: {
             type: 'String',

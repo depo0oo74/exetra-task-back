@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 
-const handlingErrors = async (err: Error,  req: Request, res: Response) => {
+const handlingErrors = async (err: Error, res: Response) => {
     if (err.name === 'ValidationError') {
         return res.status(400).json({
             status: "Error",

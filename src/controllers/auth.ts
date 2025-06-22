@@ -31,7 +31,7 @@ export const signup = async (req: Request, res: Response) => {
         data: newUser
     });
   } catch (error) {
-    handlingErrors(error, req, res)
+    handlingErrors(error, res)
   }
 }
 
@@ -51,7 +51,7 @@ export const login = async (req: Request, res: Response) => {
   // check if user exists
   const isUser: IUser | null = await User.findOne({email});
   if (!isUser) {
-    return res.status(401).json({
+    return res.status(404).json({
       status: "Error",
       message:  "This email does not exist in our data"
     })
@@ -61,7 +61,7 @@ export const login = async (req: Request, res: Response) => {
   const userEncryptedPass: string = isUser.password;
   const isPasswordCorrect: boolean = await bcrypt.compare(password, userEncryptedPass);
   if (!isPasswordCorrect) {
-    return res.status(401).json({
+    return res.status(400).json({
       status: "Error",
       message:  "Password is not correct"
     })
@@ -131,11 +131,8 @@ export const logout = async (req: Request, res: Response) => {
       status: "Success",
       message: "Logged out successfully",
     });
-  } catch (err) {
-    res.status(500).json({
-      status: "Error",
-      message: "Internal server error"
-    });
+  } catch (error) {
+    handlingErrors(error, res)
   }
 };
 
@@ -177,7 +174,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
     });
 
   } catch (error) {
-    handlingErrors(error, req, res)
+    handlingErrors(error, res)
   }
 };
 
@@ -205,11 +202,8 @@ export const resetPassword = async (req: Request, res: Response) => {
       return res.status(400).json({ status: "Error", message: "Invalid or expired token" });
     }
 
-    // hash new password
-    // const salt = await bcrypt.genSalt(10);
-    user.password = password
-
     // clear reset token props and save
+    user.password = password;
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
     await user.save();
@@ -221,6 +215,6 @@ export const resetPassword = async (req: Request, res: Response) => {
     });
 
   } catch (error) {
-    handlingErrors(error, req, res)
+    handlingErrors(error, res)
   }
 };
