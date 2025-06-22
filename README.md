@@ -68,6 +68,7 @@ project/
 │   │   ├── auth.ts
 │   ├── utils/
 │   │   ├── handlingErrors.ts
+│   │   ├── sendEmail.ts
 ├── .env
 ├── .env.example
 ├── .gitignore
