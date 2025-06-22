@@ -74,9 +74,9 @@ export const login = async (req: Request, res: Response) => {
   const cookieExpiresIn: Date = new Date(Date.now() + cookieExpiration * 60 * 60 * 1000)
   const cookieOptions: object = {
     expires: cookieExpiresIn,
-    secure: environment == 'production' ? true : false,
+    secure: true,
     httpOnly: true,
-    sameSite: environment == 'production' ? 'None' : '',
+    sameSite: 'None',
   }
 
   // delete password from retuned json
@@ -120,7 +120,7 @@ export const checkAuth = async (req: Request, res: Response) => {
 export const logout = async (req: Request, res: Response) => {
   try {
     res.clearCookie('accessToken', {
-      secure: environment == 'production' ? true : false,
+      secure: true,
       httpOnly: true
     });
     
